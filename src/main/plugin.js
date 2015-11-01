@@ -1,7 +1,7 @@
-/* global require */
+/* global require, module */
 'use strict';
 
-var transform = require('vinyl-transform');
+var through2 = require('through2');
 var browserify = require('browserify');
 
 /**
@@ -10,8 +10,25 @@ var browserify = require('browserify');
  */
 module.exports = function browserificator(options) {
 
-	return transform(function(filename) {
-		return browserify(filename, options).bundle();
+	return through2.obj(function(file, enc, done) {
+		
+		if (file.isNull()) {
+			return done(null, file);
+		}
+		
+		browserify(file, options)
+
+			.bundle(function(error, result) {
+
+				if (error) {
+					return done(error);
+				}
+				
+				file.contents = result;
+				return done(null, file);
+
+			});
+
 	});
 
 };

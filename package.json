@@ -21,7 +21,7 @@
   "homepage": "https://github.com/aetheric/gulp-recipe-browserify#readme",
   "dependencies": {
     "browserify": "^12.0.1",
-    "vinyl-transform": "^1.0.0"
+    "through2": "^2.0.0"
   },
   "devDependencies": {
     "assert": "^1.3.0",
