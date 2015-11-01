@@ -1,8 +1,11 @@
 /* global require, module */
 'use strict';
 
+var gutil = require('gulp-util');
 var through2 = require('through2');
 var browserify = require('browserify');
+
+var PluginError = gutil.PluginError;
 
 /**
  * Creates a browserify gulp build step.
@@ -16,18 +19,26 @@ module.exports = function browserificator(options) {
 			return done(null, file);
 		}
 		
-		browserify(file, options)
+		var bundle = browserify(file, options)
 
-			.bundle(function(error, result) {
+		if (typeof(options.preBundle) === 'function') {
+			bundle = options.preBundle(bundle);
+			if (!bundle) {
+				return done(new PluginError('gulp-recipe-browserify',
+					'You forgot to return the bundle'));
+			}
+		}
 
-				if (error) {
-					return done(error);
-				}
-				
-				file.contents = result;
-				return done(null, file);
+		return bundle.bundle(function(error, result) {
 
-			});
+			if (error) {
+				return done(error);
+			}
+			
+			file.contents = result;
+			return done(null, file);
+
+		});
 
 	});
 
