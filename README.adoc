@@ -1,0 +1,5 @@
+= gulp-recipe-browserify
+
+A gulp plugin that implements the recipe described at
+link:https://wehavefaces.net/gulp-browserify-the-gulp-y-way-bb359b3f9623.
+
